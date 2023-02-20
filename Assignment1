@@ -1,0 +1,178 @@
+//============================================================================
+// Name        : ASSIGNMENT1.cpp
+// Author      : Kaustubh Joshi
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+using namespace std;
+class Node
+{
+	int data;
+	int level=0;
+	Node *lc=NULL;
+	Node *rc=NULL;
+	Node *parent=NULL;
+public:
+	Node()
+	{
+		data=0;
+	}
+	Node(int p)
+	{
+		data=p;
+	}
+	friend class BST;
+};
+class BST
+{
+	Node *Head=NULL;
+
+	void trav(Node *ptr1, Node *ptr2)
+	{
+		if(ptr2->data<ptr1->data)
+		{
+			if(ptr1->lc==NULL)
+			{
+				ptr1->lc=ptr2;
+				ptr2->parent=ptr1;
+				ptr2->level=ptr2->level+1;
+			}
+			else
+			{
+				ptr1=ptr1->lc;
+				ptr2->level=ptr2->level+1;
+				trav(ptr1,ptr2);
+			}
+		}
+		else if(ptr2->data>ptr1->data)
+		{
+			if(ptr1->rc==NULL)
+			{
+				ptr1->rc=ptr2;
+				ptr2->parent=ptr1;
+				ptr2->level=ptr2->level+1;
+			}
+			else
+			{
+				ptr1=ptr1->rc;
+				ptr2->level=ptr2->level+1;
+				trav(ptr1,ptr2);
+			}
+		}
+		else
+			cout<<"\nEnter valid element!";
+	}
+public:
+int nl=0;
+	void addnode(int k)
+	{
+		Node *ndptr=new Node(k);
+		if(Head==NULL)
+		{
+			Head=ndptr;
+		}
+		else
+		{
+			Node *temp=Head;
+			trav(temp,ndptr);
+		}
+		nl=max(nl,ndptr->level);
+	}
+	void Disp(Node *pt)
+	{
+		//Node *temp=Head;
+		if(pt->lc!=NULL)
+			Disp(pt->lc);
+		cout<<pt->data<<" ";
+		if(pt->rc!=NULL)
+			Disp(pt->rc);
+	}
+	void Dispbst()
+	{
+		Disp(Head);
+	}
+	void minmax()
+	{
+		Node *temp=Head;
+		while(temp->lc!=NULL)
+		{
+			temp=temp->lc;
+		}
+		cout<<"\nMinimum element is : "<<temp->data;
+		temp=Head;
+		while(temp->rc!=NULL)
+		{
+			temp=temp->rc;
+		}
+		cout<<"\nMaximum element is : "<<temp->data;
+	}
+	void searchbstax(int k,Node *temp)
+	{
+
+		if(temp->data==k)
+			cout<<"\nElement is found";
+		else if(temp->data>k)
+		{
+			if(temp->lc!=NULL)
+				searchbstax(k,temp->lc);
+			else
+				cout<<"\nElement absent!";
+		}
+		else
+		{
+			if(temp->rc!=NULL)
+				searchbstax(k,temp->rc);
+			else
+				cout<<"\nElement absent!";
+		}
+	}
+	void searchbst(int x)
+	{
+		Node *pt=Head;
+		searchbstax(x,pt);
+	}
+    void swaptreeax(Node *tem)
+	{
+			swap(tem->lc,tem->rc);
+			if(tem->lc!=NULL)
+			swaptreeax(tem->lc);
+			if(tem->rc!=NULL)
+			swaptreeax(tem->rc);
+	}
+	void swaptree()
+	{
+		Node *pt=Head;
+		if(Head==NULL)
+		cout<<"Tree is empty";
+		else
+		swaptreeax(pt);
+	}
+};
+int main() {
+	BST b;
+	int n;
+	int nd;
+	cout<<"\nEnter number of nodes : "<<endl;
+	cin>>n;
+	for(int i=0; i<n; i++)
+	{
+		cout<<"\nEnter node value : ";
+		cin>>nd;
+		b.addnode(nd);
+	}
+	cout<<"Binary tree in order is :";
+	b.Dispbst();
+	b.minmax();
+
+	cout<<"\nLongest path is "<<b.nl;
+	int sr;
+	cout<<"\nEnter element to search : ";
+	cin>>sr;
+	b.searchbst(sr);
+
+
+	return 0;
+}
