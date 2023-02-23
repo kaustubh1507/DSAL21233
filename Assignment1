@@ -109,6 +109,77 @@ int nl=0;
 		}
 		cout<<"\nMaximum element is : "<<temp->data;
 	}
+	void delNodeax(int k, Node *temp)
+	{
+		while(temp->data!=k)
+		{
+			if(temp->data<k)
+			{
+				if(temp->rc!=NULL)
+					temp=temp->rc;
+				else
+				{
+					cout<<"Element absent";
+					break;
+				}
+			}
+			else if(temp->data>k)
+			{
+				if(temp->lc!=NULL)
+					temp=temp->lc;
+				else
+				{
+					cout<<"Element absent";
+					break;
+				}
+			}
+		}
+		if(temp->lc==NULL && temp->rc==NULL)
+		{
+			if(temp->parent->lc==temp)
+				temp->parent->lc=NULL;
+			else
+				temp->parent->rc=NULL;
+			delete temp;
+		}
+		else if(temp->lc==NULL && temp->rc!=NULL)
+		{
+			if(temp->parent->rc==temp)
+			{
+				temp->parent->rc=temp->rc;
+			}
+			else
+				temp->parent->lc=temp->rc;
+			delete temp;
+		}
+		else if(temp->rc==NULL && temp->lc!=NULL)
+		{
+			if(temp->parent->rc==temp)
+			{
+				temp->parent->rc=temp->lc;
+			}
+			else
+				temp->parent->lc=temp->lc;
+			delete temp;
+		}
+		else
+		{
+			Node *temp2=temp;
+			temp2=temp2->rc;
+			while(temp2->lc!=NULL)
+				temp2=temp2->lc;
+			temp->data=temp2->data;
+			delNodeax(temp2->data,temp2);
+		}
+	}
+	void delNode(int x)
+	{
+		Node *pt=Head;
+		if(Head==NULL)
+			cout<<"\nTree is empty";
+		else
+			delNodeax(x,pt);
+	}
 	void searchbstax(int k,Node *temp)
 	{
 
@@ -132,7 +203,10 @@ int nl=0;
 	void searchbst(int x)
 	{
 		Node *pt=Head;
-		searchbstax(x,pt);
+		if(Head==NULL)
+			cout<<"\nTree empty";
+		else
+			searchbstax(x,pt);
 	}
     void swaptreeax(Node *tem)
 	{
@@ -173,6 +247,11 @@ int main() {
 	cin>>sr;
 	b.searchbst(sr);
 
+	cout<<"\nEnter element to delete : ";
+	int de;
+	cin>>de;
+	b.delNode(de);
+	b.Dispbst();
 
 	return 0;
 }
