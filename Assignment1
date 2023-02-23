@@ -92,6 +92,9 @@ int nl=0;
 	}
 	void Dispbst()
 	{
+		if(Head==NULL)
+			cout<<"\nTree is Empty";
+		else
 		Disp(Head);
 	}
 	void minmax()
