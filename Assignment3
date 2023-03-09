@@ -1,0 +1,110 @@
+//============================================================================
+// Name        : Assignment3.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <vector>
+using namespace std;
+class Node
+{
+	int data;
+	Node *left=NULL;
+	Node *right=NULL;
+public:
+	Node()
+	{
+		data=0;
+	}
+	Node(int k)
+	{
+		data=k;
+	}
+	friend class TBT;
+};
+class TBT
+{public:
+	Node *Head=NULL;
+	vector<Node*> ptr;
+	void addNode(Node *ch,Node *par)
+	{
+		if(ch->data==par->data)
+		{
+			cout<<"\nEnter different value";
+		}
+		else if(ch->data>par->data)
+		{
+			if(par->right==NULL)
+				par->right=ch;
+			else
+				addNode(ch, par->right);
+		}
+		else
+		{
+			if(par->left==NULL)
+				par->left=ch;
+			else
+				addNode(ch,par->left);
+		}
+	}
+	void insertNode()
+	{
+		int val;
+		cout<<"\nEnter value : ";
+		cin>>val;
+		Node *newNode= new Node(val);
+		if(Head==NULL)
+			Head=newNode;
+		else
+		{
+			Node* temp=Head;
+			addNode(newNode,temp);
+		}
+	}
+	void inax(Node *var)
+	{
+		if(var->left!=NULL)
+			inax(var->left);
+		ptr.push_back(var);
+		if(var->right!=NULL)
+			inax(var->right);
+
+	}
+	void inorder()
+	{
+		Node *temp=Head;
+		if(Head==NULL)
+		{
+			cout<<"\nTree is empty";
+		}
+		else
+		{
+			inax(temp);
+		}
+	}
+	void display()
+	{
+		for (auto i:ptr)
+			cout<<i->data<<" ";
+	}
+	void toTBT()
+	{
+
+	}
+};
+int main() {
+	TBT t1;
+	int n;
+	cout<<"\nEnter number of Nodes : ";
+	cin>>n;
+	for (int i=0; i<n;i++)
+	{
+		t1.insertNode();
+	}
+	t1.inorder();
+	t1.display();
+	return 0;
+}
