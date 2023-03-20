@@ -1,0 +1,102 @@
+//============================================================================
+// Name        : Assign4.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+using namespace std;
+class Student
+{
+	int id;
+	bool status;
+	string name;
+private:
+	Student()
+	{
+		id=0;
+		name="";
+		status=0;
+	}
+	friend class Hasheesh;
+};
+
+class Hasheesh
+{
+private:
+	Student s1[10];
+	int hashcode(int k)
+		{
+			int m=k%10;
+			return(m);
+		}
+public:
+	void hashish(int n)
+	{
+		int id1;
+		string name1;
+		for(int i=0;i<n;i++)
+		{
+			cout<<"\nEnter name and id: ";
+			cin>>name1>>id1;
+			int posn=hashcode(id1);
+			while(s1[posn].status!=0)
+			{
+				if(posn<9)
+					posn++;
+				else
+					posn=0;
+			}
+			s1[posn].id=id1;
+			s1[posn].name=name1;
+			s1[posn].status=1;
+
+		}
+	}
+	void disp()
+	{
+		for(int i=0;i<10;i++)
+		{
+			cout<<"\n"<<s1[i].name<<"\t"<<s1[i].id;
+		}
+	}
+	void searcher(int l)
+	{
+		int pos1=hashcode(l);
+		while(s1[pos1].id!=l)
+		{
+			if(pos1<10)
+			    pos1++;
+			else
+				pos1=0;
+		}
+		cout<<"\n"<<s1[pos1].name<<"\t"<<l;
+	}
+};
+//int hashcode(int k)
+//	{
+//		int m=k%10;
+//		return(m);
+//	}
+int main() {
+	Hasheesh h;
+	int p;
+	cout<<"\nEnter number of entries : ";
+	cin>>p;
+	if(p>10)
+		cout<<"\nEnter value less than 10";
+	else
+		h.hashish(p);
+	h.disp();
+	int key=0;
+	while(key!=-1)
+	{
+		cout<<"\n Enter element to search (-1 to exit) : ";
+		cin>>key;
+		h.searcher(key);
+	}
+
+	return 0;
+}
