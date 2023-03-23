@@ -67,15 +67,21 @@ public:
 
 		int pos2=hashcode(l);
 		int pos1=pos2;
-
+		bool flag=0;
 		do
 		{
 			if(pos1<10)
 			    pos1++;
 			else
+			{
 				pos1=0;
+				flag=1;
+			}
 		}while(s1[pos1].id!=l && pos1!=pos2);
-		cout<<"\n"<<s1[pos1].name<<"\t"<<l;
+		if(pos1==pos2 && flag==1)
+			cout<<"\nElement absent";
+		else
+			cout<<"\n"<<s1[pos1].name<<"\t"<<l;
 	}
 };
 //int hashcode(int k)
