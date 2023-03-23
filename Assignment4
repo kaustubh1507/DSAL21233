@@ -64,14 +64,17 @@ public:
 	}
 	void searcher(int l)
 	{
-		int pos1=hashcode(l);
-		while(s1[pos1].id!=l)
+
+		int pos2=hashcode(l);
+		int pos1=pos2;
+
+		do
 		{
 			if(pos1<10)
 			    pos1++;
 			else
 				pos1=0;
-		}
+		}while(s1[pos1].id!=l && pos1!=pos2);
 		cout<<"\n"<<s1[pos1].name<<"\t"<<l;
 	}
 };
