@@ -1,0 +1,116 @@
+//============================================================================
+// Name        : Assign5.cpp
+// Author      : 
+// Version     :
+// Copyright   : Your copyright notice
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+using namespace std;
+class Node
+{
+	//int posn;
+	string name;
+	int id;
+	Node *nn;
+public:
+	Node()
+	{
+		name="";
+		id=0;
+		nn=NULL;
+	}
+	Node(string s, int d)
+	{
+		this->name=s;
+		this->id=d;
+		nn=NULL;
+	}
+	friend class LL;
+	friend class Hashtable;
+};
+class LL
+{
+	Node *Head;
+//public:
+	LL()
+	{
+		Head=NULL;
+	}
+	void insert(string ss, int dd)
+	{
+		Node *temp=new Node(ss,dd);
+		if(Head==NULL)
+		{
+			Head=temp;
+		}
+		else
+		{
+			Node *temp1=Head;
+			while(temp1->nn!=NULL)
+			{
+				temp1=temp1->nn;
+			}
+			temp1->nn=temp;
+		}
+	}
+	void Disp()
+	{
+		Node *temp=Head;
+		if(Head!=NULL)
+		{
+			do
+			{
+				cout<<"\n"<<temp->name<<"\t"<<temp->id;
+				temp=temp->nn;
+			}while(temp->nn!=NULL);
+			cout<<"\t"<<temp->name<<"\t"<<temp->id<<"\t";
+		}
+		else
+		{
+			cout<<"\nList empty!!!";
+		}
+	}
+	friend class HashTable;
+};
+class HashTable
+{
+	LL ht[26];
+
+public:
+	int hashcode(string sss)
+	{
+		return(int(sss[0])-int('a'));
+	}
+	void insertHash(string nm, int ii)
+	{
+		int i=hashcode(nm);
+		ht[i].insert(nm,ii);
+	}
+	void disp()
+	{
+		for(int i=0;i<26;i++)
+		{
+			cout<<"\n"<<i<<" : ";
+			ht[i].Disp();
+		}
+	}
+
+};
+int main()
+{
+	HashTable h;
+	int n,id1;
+	string st;
+	cout<<"Enter number of elements : ";
+	cin>>n;
+	for(int i=0;i<n;i++)
+	{
+		cout<<"Enter name and id : ";
+		cin>>st>>id1;
+		h.insertHash(st,id1);
+	}
+	h.disp();
+	return 0;
+}
