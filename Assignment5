@@ -60,7 +60,7 @@ class LL
 		Node *temp=Head;
 		if(Head!=NULL)
 		{
-			while(temp->nn!=NULL);
+			while(temp->nn!=NULL)
 			{
 				cout<<" "<<temp->name<<" -> "<<temp->id<<"\t";
 				temp=temp->nn;
