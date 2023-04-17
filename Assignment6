@@ -1,1 +1,116 @@
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+template <class T>
+class graph{
+public:
+   map<T,set<T>> m;
+   int edges,node;
+    graph(){edges=node=-1;}
+    void insert(T a,T b,bool directed){
+        m[a].insert(b);
+        //0 is not directed
+        if(!directed){
+            m[b].insert(a);
+        }
+    }
+
+    void bfs(){
+        unordered_map<T,bool> visitedNode;
+        vector<T> v;
+        queue<T> q;
+        for(auto i:m){
+            visitedNode[i.first]=false;
+        }
+        auto i=m.begin();
+        q.push(i->first);
+        visitedNode[(i)->first]=true;
+        while(!q.empty()){
+            int front=q.front();
+            q.pop();
+            v.push_back(front);
+            for(auto i: m[front]){
+                if(!visitedNode[i]){
+                    q.push(i);
+                    visitedNode[i]=1;
+                }
+            }
+        }
+        cout<<"bfs traversal [ ";
+        for(auto i:v){
+            cout<<i<<" ";
+        }cout<<" ]"<<endl;
+    }
+
+    void dfs(){
+        unordered_map<T,bool> visitedNode;
+        vector<T> v;
+        stack<T> q;
+        for(auto i:m){
+            visitedNode[i.first]=false;
+        }
+        auto i=m.begin();
+        q.push(i->first);
+        while(!q.empty()){
+            int front=q.top();
+            q.pop();
+            if(!visitedNode[front]){
+            v.push_back(front);
+            visitedNode[front]=true;
+            }
+            for(auto i=m.begin();i!=m.end();i++){
+            if (!visitedNode[i->first]){
+            q.push(i->first);
+            }
+            }
+        }
+        cout<<"DFS traversal [ ";
+        for(auto i:v){
+            cout<<i<<" ";
+        }cout<<" ]"<<endl;
+
+    }
+
+    void display(){
+    cout<<" Traversal\n";
+        for(auto i:m){
+            cout<<i.first<<"-> ";
+            for(auto j:i.second){
+                cout<<j<<", ";
+            }
+            cout<<endl;
+        }
+    }
+};
+int main() {
+    graph<int> g;
+    cout<<"enter nodes ";cin>>g.node;
+    cout<<"enter edges ";cin>>g.edges;
+    for(int i=0;i<g.edges;i++){
+        int a,b;
+        cin>>a>>b;
+        g.insert(a,b,0);
+    }
+    int n;
+    do{
+    cout<<"\n1)Display matrix\n2)Bfs traversal\n3)DFS traversal\nChoice ";
+    int x;cin>>x;
+    if(x==1){
+       g.display();
+    }
+    else if(x==2){
+       g.bfs();
+    }
+    else if(x==3){
+    g.dfs();
+    }
+
+    cout<<"continue by 1 ";
+    cin>>n;
+    }while(n==1);
+
+
+
+    return 0;
+}
 
