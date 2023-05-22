@@ -1,0 +1,201 @@
+    #include <iostream>
+    #include <queue>
+    using namespace std;
+
+    class AVLNode
+    {
+        int data;
+        AVLNode *left;
+        AVLNode *right;
+        int ht;
+
+    public:
+        AVLNode(int d)
+        {
+            data = d;
+            left = NULL;
+            right = NULL;
+            ht = 1;
+        }
+
+        friend class AVLTree;
+    };
+
+    class AVLTree
+    {
+        AVLNode *root;
+
+    public:
+        AVLTree()
+        {
+            root = NULL;
+        }
+
+        AVLNode *getter()
+        {
+            return root;
+        }
+
+        void setter(AVLNode *rt)
+        {
+            root = rt;
+        }
+
+        int height(AVLNode *x)
+        {
+            if (x == NULL)
+                return 0;
+            return x->ht;
+        }
+
+        int balanceFactor(AVLNode *x)
+        {
+            if (x == NULL)
+                return 0;
+            return height(x->left) - height(x->right);
+        }
+
+        int max(int a, int b)
+        {
+            return (a > b) ? a : b;
+        }
+
+        AVLNode *leftRotate(AVLNode *rt) // RR
+        {
+            AVLNode *x = rt->right;
+            AVLNode *y = x->left;
+
+            x->left = rt;
+            rt->right = y;
+
+            rt->ht = max(height(rt->left), height(rt->right)) + 1;
+            x->ht = max(height(x->left), height(x->right)) + 1;
+
+            return x;
+        }
+
+        AVLNode *rightRotate(AVLNode *rt) // LL
+        {
+            AVLNode *x = rt->left;
+            AVLNode *y = x->right;
+
+            x->right = rt;
+            rt->left = y;
+
+            rt->ht = max(height(rt->left), height(rt->right)) + 1;
+            x->ht = max(height(x->left), height(x->right)) + 1;
+
+            return x;
+        }
+
+        AVLNode *insertAVL(AVLNode *rt, int data)
+        {
+            if (rt == NULL)
+            {
+                AVLNode *newnode = new AVLNode(data);
+                return newnode;
+            }
+            else if (rt->data > data)
+                rt->left = insertAVL(rt->left, data);
+            else if (rt->data < data)
+                rt->right = insertAVL(rt->right, data);
+
+            rt->ht = max(height(rt->left), height(rt->right)) + 1;
+            rt = balance(rt, data);
+            return rt;
+        }
+
+        AVLNode *balance(AVLNode *&rt, int data)
+        {
+            int bf = balanceFactor(rt);
+            if (bf > 1 && data < rt->left->data)
+            {
+                cout << "RIGHT ROTATION\n";
+                return rightRotate(rt);
+            }
+            if (bf < -1 && data > rt->right->data)
+            {
+                cout << "LEFT ROTATION\n";
+                return leftRotate(rt);
+            }
+            if (bf > 1 && data > rt->left->data)
+            {
+                cout << "1. LEFT ROTATION \n2. RIGHT ROTATION\n";
+                rt->left = leftRotate(rt->left);
+                return rightRotate(rt);
+            }
+            if (bf < -1 && data < rt->right->data)
+            {
+                cout << "1. RIGHT ROTATION \n2. LEFT ROTATION\n";
+                rt->right = rightRotate(rt->right);
+                return leftRotate(rt);
+            }
+            return rt;
+        }
+
+        void preorder(AVLNode *rt)
+        {
+            if (rt == NULL)
+                return;
+            cout << rt->data << ", ";
+            preorder(rt->left);
+            preorder(rt->right);
+        }
+
+        void inorder(AVLNode *rt)
+        {
+            if (rt == NULL)
+                return;
+            inorder(rt->left);
+            cout << rt->data << ", ";
+            inorder(rt->right);
+        }
+
+        void levelOrder()
+        {
+            if (root == NULL)
+                return;
+            queue<AVLNode *> q;
+            q.push(root);
+            q.push(NULL);
+            AVLNode *temp = NULL;
+            while (!q.empty())
+            {
+                temp = q.front();
+                q.pop();
+                if (temp)
+                {
+                    cout << temp->data << ", ";
+                    if (temp->left)
+                        q.push(temp->left);
+                    if (temp->right)
+                        q.push(temp->right);
+                }
+                else
+                {
+                    cout << endl;
+                    if (!q.empty())
+                        q.push(NULL);
+                }
+            }
+            cout << "--------------------------------------\n";
+        }
+    };
+
+    int main()
+    {
+        AVLTree a;
+        int arr[] = {10, 20, 3, 1, 5, 30, 7};
+
+        for (int i = 0; i < 7; i++)
+        {
+            cout << "Element inserted: " << arr[i] << endl;
+            a.setter(a.insertAVL(a.getter(), arr[i]));
+            a.levelOrder();
+        }
+
+        a.levelOrder();
+        return 0;
+    }
+
+
