@@ -1,0 +1,168 @@
+#include<iostream>
+using namespace std;
+class Node{
+    int data;
+    Node* lchild;
+    Node* rchild;
+    public:
+    Node(){
+        data=0;
+        lchild=NULL;
+        rchild=NULL;
+    }
+    Node(int x){
+        data=x;
+        lchild=NULL;
+        rchild=NULL;
+    }
+    friend class OBST;
+};
+class OBST{
+    float* p;
+    float* q;
+    int* ide;
+    float** w;
+    float** r;
+    float** c;
+    Node* root;
+    int n;
+    public:
+    OBST(){
+        cout<<"Enter the number of Identifiers:";
+        cin>>n;
+        p=new float[n+1];
+        p[0]=0;
+        q=new float[n+1];
+        ide=new int[n];
+        w=new float*[n+1];
+        for(int i=0;i<n+1;i++){
+            w[i]=new float[n+1];
+        }
+
+        r=new float*[n+1];
+        for(int i=0;i<n+1;i++){
+            r[i]=new float[n+1];
+        }
+        c=new float*[n+1];
+        for(int i=0;i<n+1;i++){
+            c[i]=new float[n+1];
+        }
+        for (int i = 0; i <n+1; i++)
+        {
+            for (int j = 0; j < n+1; j++)
+            {
+                c[i][j]=0;
+            }
+        }
+
+        root=NULL;
+    }
+    void input_ide(){
+        cout<<"Enter the Identifiers:"<<endl;
+        for(int i=1;i<n+1;i++){
+            cout<<"Enter "<<i<<" Identifier:";
+            cin>>ide[i];
+        }
+    }
+    void input_sc(){
+        cout<<"Enter the succesful probabilities:"<<endl;
+        for(int i=1;i<n+1;i++){
+            cout<<"Enter "<<i<<" Probability:";
+            cin>>p[i];
+        }
+    }
+    void input_unsc(){
+        cout<<"Enter the unsuccesful probabilities:"<<endl;
+        for(int i=0;i<n+1;i++){
+            cout<<"Enter "<<i+1<<" Probability:";
+            cin>>q[i];
+        }
+
+        cout<<endl;
+    }
+    Node* Create_tree(int i,int j){
+        if(i!=j){
+            int k=r[i][j];
+            cout<<i<<" "<<j<<endl;
+            Node* t=new Node(ide[k]);
+            t->lchild=Create_tree(i,k-1);
+            t->rchild=Create_tree(k,j);
+            return t;
+        }
+        else{
+            return NULL;
+        }
+    }
+    void calculate_wt(){
+
+        for(int i=0;i<n;i++){
+            w[i][i]=q[i];
+
+            r[i][i]=0;
+            c[i][i]=0;
+            w[i][i+1]=q[i]+q[i+1]+p[i+1];
+            r[i][i+1]=i+1;
+            c[i][i+1]=w[i][i+1];
+        }
+        w[n][n]=q[n];
+        r[n][n]=0;
+        c[n][n]=0;
+
+
+        for(int m=2;m<=n;m++){
+            for(int i=0;i<=n-m;i++){
+                float mn=999;
+                int j=i+m;
+                w[i][j]=w[i][j-1]+p[j]+q[j];
+                int k;
+                for (int i1 = i+1; i1 <=j; i1++)
+                {
+                    float sum1=c[i][i1-1]+c[i1][j];
+
+                    if(sum1<mn){
+                        mn=sum1;
+                        k=i1;
+                    }
+                }
+
+                c[i][j]=w[i][j]+c[i][k-1]+c[k][j];
+                r[i][j]=k;
+            }
+        }
+
+        root=Create_tree(0,n);
+    }
+    Node* getter(){
+        return root;
+    }
+    void inorder(Node* temp){
+        if(temp!=0){
+            inorder(temp->lchild);
+            cout<<temp->data<<" ";
+            inorder(temp->rchild);
+        }
+    }
+    void display(){
+    	cout<<endl;
+    	cout<<"===============================================MATRIX========================================================"<<endl;
+    	cout<<endl;
+    	for(int i = 0 ; i < n+1 ; i++){
+    		for(int j = 0 ; j < n+1-i ; j++){
+    			cout<<"("<<j<<","<<j+i<<")"<<" "<<"cost : "<<c[j][j+1]<<" "<<"weight : "<<w[j][j+1]<<" "<<"root : "<<r[j][j+1]<<" ";
+    		}
+    		cout<<endl;
+    	}
+    	cout<<endl;
+    }
+};
+
+int main(){
+    OBST o;
+    o.input_ide();
+    o.input_sc();
+    o.input_unsc();
+    o.calculate_wt();
+    o.inorder(o.getter());
+    o.display();
+    return 0;
+}
